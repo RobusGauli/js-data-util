@@ -1,0 +1,101 @@
+window.onload = function() {
+  const canvas = document.getElementById('main');
+  const context  = canvas.getContext('2d');
+  
+  
+  const width = canvas.width = window.innerWidth;
+  const height = canvas.height = window.innerHeight;
+  const cols = rows = 70;
+  const size = 10;
+  function createGrid() {
+    const grid = [];
+    for (let i = 0; i < cols; i++) {
+      const newCol = [];
+      for( let j = 0; j < rows; j++) {
+        newCol.push(Math.floor(Math.random() * 2))
+      }
+      grid.push(newCol);
+    }
+    return grid;
+  }
+  
+  function paintGrid(grid) {
+    for (let col = 0; col < cols; col++) {
+      for (let row = 0; row < rows; row++) {
+        context.save();
+        context.fillStyle = 'rgba(100, 100, 100, 0.6)'
+        if (grid[col][row] === 1) {
+          context.fillRect(col * size, row * size, size -1, size - 1)
+        }
+        context.restore();
+      }
+    }
+  }
+  function countAlive(grid, col, row) {
+    let total = 0;
+    for (let i = -1; i < 2; i++) {
+      for (let j = -1; j < 2; j++) {
+        let c  = (col + i + cols) % cols;
+        let r = (row + j + rows) % rows;
+        if (grid[c][r] === 1) {
+          total += 1;
+        }
+        
+      }
+    }
+    if (grid[col][row] == 1) {
+      total -= 1;
+    }
+    return total;
+    
+  }
+  function generateNewGrid(oldGrid) {
+    const newGrid = [];
+    for (let col = 0; col < cols; col++) {
+      const newCol = [];
+      for (let row = 0 ; row < rows; row++){
+        let alive = countAlive(oldGrid, col, row);
+        if (oldGrid[col][row] && (alive  < 2 || alive > 3)) {
+          newCol.push(0);
+        } else if (oldGrid[col][row] && (alive == 3 || alive == 2)){
+          newCol.push(1);
+        } else if(oldGrid[col][row] === 0 && (alive === 3)) {
+          newCol.push(1);
+        } else {
+          newCol.push(oldGrid[col][row]);
+        }
+      }
+      newGrid.push(newCol);
+    }
+    return newGrid;
+  }
+  
+  
+  let grid = createGrid();
+  let next;
+  function setup() {
+    paintGrid(grid);
+    
+  }
+  
+  
+  
+  function draw() {
+    paintGrid(grid);
+    next = generateNewGrid(grid);
+    grid = next;
+    //console.log('asd')
+    
+  }
+  
+  function _draw() {
+    context.save();
+    context.clearRect(0, 0, width, height);
+    context.save();
+    
+    draw();
+    requestAnimationFrame(_draw);
+  }
+  setup();
+  _draw(); 
+}
