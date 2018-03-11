@@ -4,6 +4,10 @@
 
 
 const makeObjectBasedOnClosure = (a=true, b=true) => {
+  // instacing the obejct using the closure variable whos value
+  // then can be change with chainable instance 
+  // so as to modify the object's state
+  
   const obj =  new class {
     constructor() {
       // this a nd b variable are from the function closure rather than passing
