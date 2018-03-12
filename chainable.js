@@ -1,4 +1,4 @@
-// this techinique will be much more better to expose the api 
+//   this techinique will be much more better to expose the api 
 
 // this is also used in library such as Prop Types
 // somethis
